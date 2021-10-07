@@ -10,8 +10,9 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
 
   $result = Invoke-Command -ScriptBlock {
     if ($ast -match "^git add") {
-      $addableFiles = git ls-files --others --exclude-standard -m
-      $addableFiles 
+      $addableFiles = @(git ls-files --others --exclude-standard -m)
+      $alreadyAddedFiles = @($words | Select-Object -Skip 2)
+      $addableFiles | Where-Object { !$alreadyAddedFiles.Contains($_) }
     } elseif ($ast -match "^git rm") {
       $removableFiles = git ls-files
       $removableFiles 
