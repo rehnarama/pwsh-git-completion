@@ -1,8 +1,3 @@
-$gitFlags = @{
-  commit = "--amend", "--no-edit"
-  add = "-n", "--dry-run", "-p", "--patch", "-e", "--edit", "-f", "--force", "-u", "--update", "--renormalize", "-N", "--intent-to-add", "-A", "--all", "--ignore-removal", "--refresh", "--ignore-errors", "--ignore-missing", "--chmod", "--pathspec-from-file", "--pathspec-file-nul" 
-}
-
 # Yes this will probably break in older/newer git versions than the one this is written for.
 $githelpParseRegex = "(?<= {4})(-{1,2}(?:\w+)(?:(?:-\w+)+)?)(?:, )?(-{1,2}(?:\w+)(?:(?:-\w+)+)?)?"
 
