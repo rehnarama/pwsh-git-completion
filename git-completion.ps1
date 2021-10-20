@@ -5,14 +5,14 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
   param($wordToComplete, $commandAst, $cursorPosition)
   
   $ast = $commandAst.ToString()
-  $words = ($ast | Select-String "(\w+-?)+" -AllMatches).Matches | ForEach-Object { $_.Value } 
+  $words = $ast -split '\s+'
   $command = $words | Select-Object -Index 1
 
   $result = Invoke-Command -ScriptBlock {
     if ($ast -match "^git add") {
       $addableFiles = @(git ls-files --others --exclude-standard -m)
       $alreadyAddedFiles = @($words | Select-Object -Skip 2)
-      $addableFiles | Where-Object { !$alreadyAddedFiles.Contains($_) }
+      $addableFiles | Where-Object { $_ -notIn $alreadyAddedFiles }
     } elseif ($ast -match "^git rm") {
       $removableFiles = git ls-files
       $removableFiles 
