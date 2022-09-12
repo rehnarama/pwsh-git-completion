@@ -19,11 +19,13 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
     } elseif ($ast -match "^git restore") {
       $restorableFiles = git ls-files -m
       $restorableFiles 
-    } elseif ($ast -match "^git (checkout)") {
+    } elseif ($ast -match "^git (checkout|rebase)") {
       $switchableBranches = git branch -a --format "%(refname:lstrip=2)"
       $switchableBranches 
-    } elseif ($ast -match "^git (switch)") {
-      $switchableBranches = git branch --format "%(refname:lstrip=2)"
+    } elseif ($ast -match "^git switch") {
+      $switchableBranches = `
+        @(git branch --format "%(refname:lstrip=2)") `
+        + @(git branch -r --format "%(refname:lstrip=3)")
       $switchableBranches 
     } else {
       $gitCommands = (git --list-cmds=main,others,alias,nohelpers)
@@ -44,5 +46,5 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
   
 
   $result = @($result)
-  $result -like "$wordToComplete*"
+  $result -like "*$wordToComplete*"
 }
