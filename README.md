@@ -9,13 +9,13 @@ Also, this one tries to intelligently provide completions based on context, e.g.
 
 ## How to use?
 
-Just put the contents of `git-completion.ps1` in your powershell profile, e.g. `notepad.exe $PROFILE`.
+Install it either manually, or from PowershellGallery with:
+```
+Install-Module pwsh-git-completion
+```
 
-It's also recommended to have 
-```
-Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
-```
-in your Powershell profile to get nice completion 😊
+Later, register the completions with the funciton `Register-GitCompletion`. Add
+it to your profile to load the completion automatically.
 
 ## Requirements
 
