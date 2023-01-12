@@ -53,7 +53,7 @@ function Register-GitCompletion {
 
 
     $result = @($result)
-    $result -like "*$wordToComplete*"
+    $result -like "$wordToComplete*"
   }
 }
 
