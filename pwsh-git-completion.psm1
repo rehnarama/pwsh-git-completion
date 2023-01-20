@@ -8,18 +8,22 @@ function Register-GitCompletion {
     $ast = $commandAst.ToString()
     $words = $ast -split '\s+'
     $command = $words | Select-Object -Index 1
+    $isFile = $false
 
     $result = Invoke-Command -ScriptBlock {
       if ($ast -match "^git add") {
+        Set-Variable -Scope 1 -Name "isFile" -Value $true
         $addableFiles = @(git ls-files --others --exclude-standard -m)
         $alreadyAddedFiles = @($words | Select-Object -Skip 2)
         $addableFiles | Where-Object { $_ -notIn $alreadyAddedFiles }
       }
       elseif ($ast -match "^git rm") {
+        Set-Variable -Scope 1 -Name "isFile" -Value $true
         $removableFiles = git ls-files
         $removableFiles 
       }
       elseif ($ast -match "^git restore") {
+        Set-Variable -Scope 1 -Name "isFile" -Value $true
         $restorableFiles = git ls-files -m
         $restorableFiles 
       }
@@ -51,9 +55,13 @@ function Register-GitCompletion {
       $result = @($result) + @($flags)
     }
 
-
     $result = @($result)
-    $result -like "$wordToComplete*"
+
+    if ($isFile) {
+      $result -like "*$wordToComplete*"
+    } else {
+      $result -like "$wordToComplete*"
+    }
   }
 }
 
