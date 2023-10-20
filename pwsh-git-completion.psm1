@@ -17,24 +17,24 @@ function Register-GitCompletion {
       }
       elseif ($ast -match "^git rm") {
         $removableFiles = git ls-files
-        $removableFiles 
+        $removableFiles
       }
       elseif ($ast -match "^git restore") {
         $restorableFiles = git ls-files -m
-        $restorableFiles 
+        $restorableFiles
       }
       elseif ($ast -match "^git (checkout|rebase)") {
         $switchableBranches = git branch -a --format "%(refname:lstrip=2)"
-        $switchableBranches 
+        $switchableBranches
       }
       elseif ($ast -match "^git switch") {
         $switchableBranches = `
         @(git branch --format "%(refname:lstrip=2)") `
           + @(git branch -r --format "%(refname:lstrip=3)")
-        $switchableBranches 
+        $switchableBranches
       }
       else {
-        $gitCommands = (git --list-cmds=main, others, alias, nohelpers)
+        $gitCommands = (git --list-cmds=main,others,alias,nohelpers)
         if (!$gitCommands.Contains($command)) {
           $gitCommands
         }
@@ -47,7 +47,7 @@ function Register-GitCompletion {
     if ($wordToComplete -match "^-" -and $command) {
       # omg, a monstrosity
       # also 2>&1 since apparently some `git <command> -h` writes to stderr ¯\_(ツ)_/¯
-      $flags = (git $command -h 2>&1 | Select-String -Pattern $githelpParseRegex).Matches | ForEach-Object { $_.Groups | Where-Object { $_.Success -and $_.Name -ne 0 } } | ForEach-Object { $_.Value }    
+      $flags = (git $command -h 2>&1 | Select-String -Pattern $githelpParseRegex).Matches | ForEach-Object { $_.Groups | Where-Object { $_.Success -and $_.Name -ne 0 } } | ForEach-Object { $_.Value }
       $result = @($result) + @($flags)
     }
 
